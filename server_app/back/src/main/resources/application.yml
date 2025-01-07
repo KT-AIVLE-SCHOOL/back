@@ -1,0 +1,11 @@
+spring:
+    application:
+      name: back
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        ddl-auto: update
+    datasource:
+      url: jdbc:postgresql://db:5432/dbaivle18
+      username: postgres
+      password: dbaivle18
