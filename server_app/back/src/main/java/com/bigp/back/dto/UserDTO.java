@@ -42,7 +42,7 @@ public class UserDTO {
     @NoArgsConstructor
     public static class BabyInfo {
         private String babyname;
-        private Date babybirth;
+        private String babybirth;
     }
 
     @Getter

@@ -8,6 +8,7 @@ import com.bigp.back.dto.UserDTO;
 import com.bigp.back.entity.BabyInfo;
 import com.bigp.back.entity.UserInfo;
 import com.bigp.back.repository.BabyRepository;
+import com.bigp.back.utils.DateFormatter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class BabyInfoService {
     private final UserInfoService userInfoService;
     private final BabyRepository babyRepository;
+    private final DateFormatter transDate;
 
     public boolean insertBabyInfo(String accessToken) {
         UserInfo userInfo = userInfoService.getUserInfo("accessToken", accessToken);
@@ -29,7 +31,7 @@ public class BabyInfoService {
             babyInfo = new BabyInfo();
 
             babyInfo.setBabyname("입력해주세요");
-            babyInfo.setBabybirth(new Date("1990-01-01"));
+            babyInfo.setBabybirth(transDate.formatDateYMD(new Date()));
             babyRepository.save(babyInfo);
             return true;
         }

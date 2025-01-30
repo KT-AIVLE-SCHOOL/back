@@ -50,7 +50,7 @@ public class JwtTokenProvider {
             Date expirationDate = claimsJws.getPayload().getExpiration();
             Date now = new Date();
 
-            return expirationDate.before(now);
+            return !expirationDate.before(now);
         } catch (ExpiredJwtException e) {
             return false;
         } catch (JwtException e) {

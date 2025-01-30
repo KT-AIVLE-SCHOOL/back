@@ -1,7 +1,5 @@
 package com.bigp.back.controller;
 
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -92,7 +90,6 @@ public class AuthApiController {
                 String refreshToken = user.getRefreshToken();
                 babyService.insertBabyInfo(accessToken);
                 configInfoService.insertConfigInfo(accessToken);
-                System.out.println(accessToken);
                 return ResponseEntity.ok(new RegisterApiDto.SuccessResponse(true, accessToken, refreshToken));
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -152,7 +149,6 @@ public class AuthApiController {
         String subject = "[나비잠] 안녕하십니까 고객님. 이메일 인증번호 안내입니다.";
         String text = "<h3>나비잠을 사용해주시는 고객님. 대단히 감사합니다.</h3>\n<p>인증번호는 다음과 같습니다.</p>\n<h4>" + code + "</h4>\n<p>나비잠에서 인증번호를 입력해주십시오.</p>";
 
-
         try {
             if (mailService.sendMail(email, subject, text)) {
                 verificationSerivce.insertVerificationCode(email, code);
@@ -187,8 +183,7 @@ public class AuthApiController {
     }
     
     @GetMapping("/findEmail")
-    public ResponseEntity<?> findEmail(@RequestParam FindEmailApiDto.Parameter param) {
-        String email = param.getEmail();
+    public ResponseEntity<?> findEmail(@RequestParam String email) {
         CheckUtils util = new CheckUtils();
 
         if (!util.checkEmail(email))
@@ -196,7 +191,7 @@ public class AuthApiController {
                     .body(new FindEmailApiDto.ErrorResponse(false, "잘못된 이메일 형식입니다"));
         
         try {
-            if (userService.getUserInfo("email", email) == null)
+            if (userService.getUserInfo("email", email) != null)
                 return ResponseEntity.ok(new FindEmailApiDto.SuccessResponse(true));
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new FindEmailApiDto.ErrorResponse(false, "존재하지 않는 이메일입니다"));
@@ -207,8 +202,7 @@ public class AuthApiController {
     }
     
     @GetMapping("/findPass")
-    public ResponseEntity<?> findPass(@CookieValue Map<String, String> cookies) {
-        String accessToken = cookies.get("accessToken");
+    public ResponseEntity<?> findPass(@CookieValue(name="accessToken", required=true) String accessToken) {
         CheckUtils util = new CheckUtils();
         UserDTO.UserInfo userDto = new UserDTO.UserInfo();
 

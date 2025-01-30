@@ -15,13 +15,12 @@ public class MailService {
     @Value("${spring.mail.username}")
     private String username;
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     public boolean sendMail(String to, String subject, String text) {
-        MimeMessage message = mailSender.createMimeMessage();
         try {
+            MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
             helper.setFrom(username);
             helper.setTo(to);
             helper.setSubject(subject);

@@ -32,8 +32,9 @@ public class VerificationCodeService {
         VerificationCode verificationCode = verificationCodeRepository.findByEmail(email);
 
         if (verificationCode != null) {
-            if (passwordEncoder.matches(code, verificationCode.getEmail())) {
-                verificationCodeRepository.delete(verificationCode);
+            String dbCode = verificationCode.getCode();
+            verificationCodeRepository.delete(verificationCode);
+            if (passwordEncoder.matches(code, dbCode)) {
                 return 0;
             }
             return 1;

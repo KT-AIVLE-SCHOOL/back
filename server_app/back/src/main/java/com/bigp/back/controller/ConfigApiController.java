@@ -76,7 +76,7 @@ public class ConfigApiController {
         String accessToken = request.getAccessToken();
         boolean alarm = request.isAlarm();
         String babyName = request.getBabyName();
-        Date babyBirth = request.getBabyBirth();
+        String babyBirth = request.getBabyBirth();
         int dataEliminateDuration = request.getDataEliminateDuration();
         int coreTimeStart = request.getCoreTimeStart();
         int coreTimeEnd = request.getCoreTimeEnd();

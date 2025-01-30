@@ -1,7 +1,5 @@
 package com.bigp.back.dto.config;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +12,7 @@ public class SetSettingInfoApiDto {
         private String accessToken;
         private boolean alarm;
         private String babyName;
-        private Date babyBirth;
+        private String babyBirth;
         private Integer dataEliminateDuration;
         private Integer coreTimeStart;
         private Integer coreTimeEnd;
