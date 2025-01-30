@@ -1,11 +1,24 @@
 spring:
-    application:
-      name: back
-    jpa:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
-      hibernate:
-        ddl-auto: update
-    datasource:
-      url: jdbc:postgresql://db:5432/dbaivle18
-      username: postgres
-      password: dbaivle18
+  application:
+    name: back
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://db:5432/user
+    username: postgres
+    password: 1234
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${MAILUSER}
+    password: ${MAILPASS}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+
+jwt:
+  secret: ${JWT_SECRET}

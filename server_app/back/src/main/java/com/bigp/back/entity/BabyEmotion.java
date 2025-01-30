@@ -1,13 +1,11 @@
 package com.bigp.back.entity;
 
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,16 +19,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ChatInfo {
+public class BabyEmotion {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
-    private Date requestTime;
-    private List<String> request;
-    private List<String> response;
+
+    private Date checkTime;
+    private int emotion;
 
     @ManyToOne
-    @JoinColumn(name="chat_id")
+    @JoinColumn(name="baby_id")
     @JsonBackReference
-    private UserInfo chat;
+    BabyInfo baby;
+
 }

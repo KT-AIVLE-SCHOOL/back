@@ -1,11 +1,11 @@
 package com.bigp.back.entity;
 
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,14 +21,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BabyInfo {
+public class AdminInfo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private String babyname;
-    private Date babybirth;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="baby")
+    @Column(unique=true)
+    private String adminId;
+
+    private String password;
+
+    @Column(unique=true)
+    private String accessToken;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="notice")
     @JsonManagedReference
-    private List<BabyEmotion> babyEmotions;
+    private List<NoticeInfo> notice;
 }
