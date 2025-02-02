@@ -71,10 +71,4 @@ public class ChatInfoService {
         }
         return null;
     }
-
-    public boolean deleteChatInfo(String accessToken, Date time) {
-        UserInfo user = userRepository.findByAccessToken(accessToken);
-
-        return false;
-    }
 }
