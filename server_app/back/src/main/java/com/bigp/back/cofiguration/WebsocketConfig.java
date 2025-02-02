@@ -20,7 +20,6 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.bigp.back.dto.UserDTO;
-import com.bigp.back.entity.UserInfo;
 import com.bigp.back.service.ChatInfoService;
 import com.bigp.back.service.UserInfoService;
 import com.bigp.back.utils.DateFormatter;
@@ -46,13 +45,13 @@ public class WebsocketConfig implements WebSocketConfigurer {
 @Component
 @RequiredArgsConstructor
 class ChatWebSocketHandler extends TextWebSocketHandler {
-    @Value("${AI_PROTOCOLS}")
+    @Value("${ai.protocols}")
     private String aiProtocol;
 
-    @Value("${CHATAI_HOST}")
+    @Value("${chatai.host}")
     private String chataiHost;
 
-    @Value("${CHATAI_PORT}")
+    @Value("${chatai.port}")
     private String chataiPort;
 
     private final ObjectMapper objectMapper;
@@ -84,9 +83,9 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private void handleGreeting(WebSocketSession session, ObjectNode questionMes, SessionData sessionData) throws IOException {
         sessionData.accessToken = questionMes.get("accessToken").asText();
-        UserInfo value = userService.getUserInfo("accessToken", sessionData.accessToken);
+        boolean success = userService.isUser("accessToken", sessionData.accessToken);
 
-        if (value == null) {
+        if (!success) {
             session.close();
             return ;
         }
@@ -106,7 +105,7 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
     private void handleQuestion(WebSocketSession session, ObjectNode questionsMes, SessionData sessionData) throws IOException {
         String question = questionsMes.get("data").asText();
         String url = String.format("%s://%s:%s/api/getAnswer?question=%s", aiProtocol, chataiHost, chataiPort, question);
-        String answer = restTemplate.getForObject(url, String.class);
+        String answer = restTemplate.getForObject(url, Map.class).get("answer").toString();
 
         sessionData.que.add(question);
         sessionData.res.add(answer);

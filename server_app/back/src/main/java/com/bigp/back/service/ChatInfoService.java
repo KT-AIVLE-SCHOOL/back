@@ -14,6 +14,7 @@ import com.bigp.back.entity.UserInfo;
 import com.bigp.back.repository.ChatRepository;
 import com.bigp.back.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,6 +23,7 @@ public class ChatInfoService {
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
 
+    @Transactional
     public boolean insertChatInfo(String accessToken, UserDTO.ChatInfo chat) {
         UserInfo user = userRepository.findByAccessToken(accessToken);
 
@@ -47,11 +49,17 @@ public class ChatInfoService {
         return false;
     }
 
+    @Transactional
     public Map<String, Object> recentlyChatInfo(String accessToken) {
         UserInfo user = userRepository.findByAccessToken(accessToken);
 
         if (user != null) {
-            ChatInfo chat = user.getChatInfoList().getLast();
+            List<ChatInfo> chatList = user.getChatInfoList();
+            ChatInfo chat = null;
+
+            if (!chatList.isEmpty()) {
+                chat = chatList.getLast();
+            }
 
             if (chat != null) {
                 Map<String, Object> data = new HashMap<>();

@@ -105,6 +105,19 @@ public class UserInfoService {
         return user;
     }
 
+    public boolean isUser(String key, String value) {
+        UserInfo user;
+
+        if (key.equals("accessToken"))
+            user = userRepository.findByAccessToken(value);
+        else
+            user = userRepository.findByEmail(value);
+        
+        if (user == null)
+            return false;
+        return true;
+    }
+
     public int setProfileImage(String key, String value, String profileImage) {
         UserInfo user;
 

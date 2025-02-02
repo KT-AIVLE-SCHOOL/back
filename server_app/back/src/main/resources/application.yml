@@ -26,3 +26,9 @@ jwt:
 admin:
   id: ${ADMIN_ID}
   password: ${ADMIN_PASS}
+
+ai:
+  protocols: ${AI_PROTOCOLS}
+chatai:
+  host: ${CHATAI_HOST}
+  port: ${CHATAI_PORT}
