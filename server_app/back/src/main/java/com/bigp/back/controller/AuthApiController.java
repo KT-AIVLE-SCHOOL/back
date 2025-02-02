@@ -62,7 +62,7 @@ public class AuthApiController {
             if (adminService.isMatchedAdmin(email, password)) {
                 String newAccessToken = tokenProvider.createToken(email, true);
                 adminService.updateAdminInfo("email", email, new AdminDTO.AdminInfo(null,null, newAccessToken));
-                return ResponseEntity.ok(new LoginApiDto.SuccessAdminResponse(true, false, newAccessToken));
+                return ResponseEntity.ok(new LoginApiDto.SuccessAdminResponse(true, true, newAccessToken));
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new LoginApiDto.ErrorResponse(false, "이메일 또는 비밀번호 오류"));
@@ -84,7 +84,7 @@ public class AuthApiController {
         }
 
         try {
-            if (userService.insertUser(request)) {
+            if (!adminService.isMatchedAdmin(email, password) && userService.insertUser(request)) {
                 UserInfo user = userService.getUserInfo("email", email);
                 String accessToken = user.getAccessToken();
                 String refreshToken = user.getRefreshToken();

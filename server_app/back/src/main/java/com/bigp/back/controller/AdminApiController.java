@@ -75,7 +75,7 @@ public class AdminApiController {
     }
 
     @GetMapping("/getNoticeList")
-    public ResponseEntity<?> getNoticeList(@RequestParam String param) {
+    public ResponseEntity<?> getNoticeList() {
         try {
             List<Map<String, String>> sendList = noticeService.getNoticeList();
 
@@ -90,10 +90,7 @@ public class AdminApiController {
     }
     
     @GetMapping("/readNotice")
-    public ResponseEntity<?> readNotice(@RequestParam ReadNoticeApiDto.RequestParameter param) {
-        String header = param.getHeader();
-        String writetime = param.getWritetime();
-
+    public ResponseEntity<?> readNotice(@RequestParam(name="header") String header, @RequestParam(name="writetime") String writetime) {
         try {
             Map<String, String> list = noticeService.readNotice(header, writetime);
 

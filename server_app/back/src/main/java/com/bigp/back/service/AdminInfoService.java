@@ -18,10 +18,10 @@ public class AdminInfoService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${ADMIN_ID}")
+    @Value("${admin.id}")
     String adminId;
 
-    @Value("${ADMIN_PASS}")
+    @Value("${admin.password}")
     String adminPass;
 
     public boolean insertAdminInfo() {
