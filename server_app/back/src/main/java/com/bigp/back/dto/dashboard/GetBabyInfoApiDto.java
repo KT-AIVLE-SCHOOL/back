@@ -1,25 +1,17 @@
-package com.bigp.back.dto.config;
+package com.bigp.back.dto.dashboard;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public class SetProfileImageApiDto {
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class RequestBody {
-        private String accessToken;
-        private String profileImage;
-    }
-
+public class GetBabyInfoApiDto {
     @Getter
     @Setter
     @AllArgsConstructor
     public static class SuccessResponse {
         private boolean success;
-        private String image;
+        private String babyName;
+        private String babyBirth;
     }
 
     @Getter

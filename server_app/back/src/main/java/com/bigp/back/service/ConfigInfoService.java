@@ -30,6 +30,8 @@ public class ConfigInfoService {
             configInfo.setCoretimestart(7);
             configInfo.setDataeliminateduration(14);
             configRepository.save(configInfo);
+            userInfo.setConfigInfo(configInfo);
+            userRepository.save(userInfo);
             return true;
         }
         return false;

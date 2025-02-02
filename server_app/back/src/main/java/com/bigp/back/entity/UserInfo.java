@@ -30,13 +30,9 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    // 사용자명
     private String username;
-    // 사용자 암호
     private String password;
-    // 사용자 이메일
     private String email;
-    // jwt 토큰
     private String accessToken;
     private String refreshToken;
     private String aliasname;
@@ -53,7 +49,7 @@ public class UserInfo {
     @JsonManagedReference
     private ConfigInfo configInfo;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="chat")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="chat", fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<ChatInfo> chatInfoList;
 }

@@ -4,7 +4,6 @@ import java.util.Base64;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bigp.back.dto.UserDTO;
 import com.bigp.back.dto.auth.RegisterApiDto;
@@ -106,7 +105,7 @@ public class UserInfoService {
         return user;
     }
 
-    public int setProfileImage(String key, String value, MultipartFile profileImage) {
+    public int setProfileImage(String key, String value, String profileImage) {
         UserInfo user;
 
         if (key.equals("accessToken")) {
@@ -117,7 +116,7 @@ public class UserInfoService {
 
         try {
             if (user != null) {
-                user.setProfileImage(profileImage.getBytes());
+                user.setProfileImage(Base64.getDecoder().decode(profileImage));
                 userRepository.save(user);
                 return 0;
             }

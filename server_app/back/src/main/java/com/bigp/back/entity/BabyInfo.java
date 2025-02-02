@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,7 +28,7 @@ public class BabyInfo {
     private String babyname;
     private String babybirth;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="baby")
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="baby", fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<BabyEmotion> babyEmotions;
 }

@@ -8,6 +8,7 @@ import com.bigp.back.dto.UserDTO;
 import com.bigp.back.entity.BabyInfo;
 import com.bigp.back.entity.UserInfo;
 import com.bigp.back.repository.BabyRepository;
+import com.bigp.back.repository.UserRepository;
 import com.bigp.back.utils.DateFormatter;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BabyInfoService {
     private final UserInfoService userInfoService;
+    private final UserRepository userRepository;
     private final BabyRepository babyRepository;
     private final DateFormatter transDate;
 
@@ -33,6 +35,8 @@ public class BabyInfoService {
             babyInfo.setBabyname("입력해주세요");
             babyInfo.setBabybirth(transDate.formatDateYMD(new Date()));
             babyRepository.save(babyInfo);
+            userInfo.setBabyInfo(babyInfo);
+            userRepository.save(userInfo);
             return true;
         }
         return false;

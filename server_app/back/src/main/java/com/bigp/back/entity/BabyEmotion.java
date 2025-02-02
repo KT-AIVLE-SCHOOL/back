@@ -1,7 +1,5 @@
 package com.bigp.back.entity;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -24,12 +22,11 @@ public class BabyEmotion {
     @GeneratedValue
     private Long id;
 
-    private Date checkTime;
+    private String checkTime;
     private int emotion;
 
     @ManyToOne
     @JoinColumn(name="baby_id")
     @JsonBackReference
     BabyInfo baby;
-
 }

@@ -1,8 +1,6 @@
 package com.bigp.back.controller;
 
 import java.util.Base64;
-import java.util.Date;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.bigp.back.dto.UserDTO;
 import com.bigp.back.dto.config.DeleteUserApiDto;
@@ -47,8 +44,7 @@ public class ConfigApiController {
     private final ConfigInfoService configService;
 
     @GetMapping("/getSettingInfo")
-    public ResponseEntity<?> getSettingInfo(@CookieValue Map<String, String> cookies) {
-        String accessToken = cookies.get("accessToken");
+    public ResponseEntity<?> getSettingInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
 
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
@@ -78,8 +74,6 @@ public class ConfigApiController {
         String babyName = request.getBabyName();
         String babyBirth = request.getBabyBirth();
         int dataEliminateDuration = request.getDataEliminateDuration();
-        int coreTimeStart = request.getCoreTimeStart();
-        int coreTimeEnd = request.getCoreTimeEnd();
 
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
@@ -91,8 +85,6 @@ public class ConfigApiController {
                     baby.setBabybirth(babyBirth);
                     config.setAlarm(alarm);
                     config.setDateeliminateduration(dataEliminateDuration);
-                    config.setCoretimestart(coreTimeStart);
-                    config.setCoretimeend(coreTimeEnd);
                     boolean b = babyService.updateBabyInfo(accessToken, baby);
                     boolean c = configService.updateConfigInfo(accessToken, config);
                     if (b && c)
@@ -155,8 +147,7 @@ public class ConfigApiController {
     }
     
     @GetMapping("/getProfileImage")
-    public ResponseEntity<?> getProfileImage(@CookieValue Map<String, String> cookies) {
-        String accessToken = cookies.get("accessToken");
+    public ResponseEntity<?> getProfileImage(@CookieValue(name="accessToken", required=true) String accessToken) {
 
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
@@ -178,7 +169,7 @@ public class ConfigApiController {
     @PostMapping("/setProfileImage")
     public ResponseEntity<?> postMethodName(@RequestBody SetProfileImageApiDto.RequestBody request) {
         String accessToken = request.getAccessToken();
-        MultipartFile profile = request.getProfileImage();
+        String profile = request.getProfileImage();
         int isSuccess = userService.setProfileImage("accessToken", accessToken, profile);
 
         if (isSuccess == 0)
@@ -191,9 +182,7 @@ public class ConfigApiController {
     }
     
     @GetMapping("/getPersonalInfo")
-    public ResponseEntity<?> getPersonalInfo(@CookieValue Map<String, String> cookies) {
-        String accessToken = cookies.get("accessToken");
-
+    public ResponseEntity<?> getPersonalInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
                 UserInfo user = userService.getUserInfo("accessToken", accessToken);
@@ -210,9 +199,7 @@ public class ConfigApiController {
     }
     
     @GetMapping("/getAliasName")
-    public ResponseEntity<?> getAliasName(@CookieValue Map<String, String> cookies) {
-        String accessToken = cookies.get("accessToken");
-
+    public ResponseEntity<?> getAliasName(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
                 UserInfo user = userService.getUserInfo("accessToken", accessToken);
@@ -278,5 +265,4 @@ public class ConfigApiController {
                     .body(new SetPassApiDto.ErrorResponse(false, "내부 서버 오류"));
         }
     }
-    
 }
