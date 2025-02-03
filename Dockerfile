@@ -10,6 +10,6 @@ RUN apt-get update && apt-get install dumb-init
 RUN chmod +x ./gradlew
 RUN chmod +x /usr/local/bin/script.sh
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "sh", "/usr/local/bin/script.sh"]
