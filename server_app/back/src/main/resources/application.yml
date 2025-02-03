@@ -6,13 +6,13 @@ spring:
       ddl-auto: update
   datasource:
     url: jdbc:postgresql://aivle-bigp-18-db.postgres.database.azure.com:5432/postgres?serverTimezone=Asia/Seoul
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    username: aivlePostgres
+    password: ssss1185!
   mail:
     host: smtp.naver.com
     port: 587
-    username: ${MAILUSER}
-    password: ${MAILPASS}
+    username: wnwoduq@naver.com
+    password: dhrtus56
     properties:
       mail:
         smtp:
@@ -20,14 +20,14 @@ spring:
           starttls:
             enable: false
 jwt:
-  secret: ${JWT_SECRET}
+  secret: wefewfewfwefqwdqwdqwfwef
 
 admin:
-  id: ${ADMIN_ID}
-  password: ${ADMIN_PASS}
+  id: wnwoduq@naver.com
+  password: string@123
 
 ai:
-  protocols: ${AI_PROTOCOLS}
+  protocols: http
 chatai:
-  host: ${CHATAI_HOST}
-  port: ${CHATAI_PORT}
+  host: chatai
+  port: 8001
