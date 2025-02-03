@@ -36,3 +36,5 @@ ai:
 chatai:
   host: ${CHATAI_HOST}
   port: ${CHATAI_PORT}
+emoteai:
+  host: ${EMOTEAI_HOST}
