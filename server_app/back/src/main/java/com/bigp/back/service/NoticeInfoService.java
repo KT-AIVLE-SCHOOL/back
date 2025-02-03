@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.bigp.back.dto.AdminDTO;
 import com.bigp.back.entity.AdminInfo;
 import com.bigp.back.entity.NoticeInfo;
 import com.bigp.back.repository.AdminRepository;
@@ -89,10 +88,12 @@ public class NoticeInfoService {
     }
 
     public List<Map<String, String>> getNoticeList() {
-        AdminInfo admin = adminRepository.findAll().getFirst();
+        AdminInfo admin = adminRepository.findAll().get(0);
+        // AdminInfo admin = adminRepository.findAll().getFirst();
 
         if (admin != null) {
-            List<NoticeInfo> list = admin.getNotice().reversed();
+            List<NoticeInfo> list = admin.getNotice();
+            // List<NoticeInfo> list = admin.getNotice().reversed();
 
             List<Map<String, String>> headerList = new ArrayList<>();
 
@@ -110,7 +111,8 @@ public class NoticeInfoService {
     }
 
     public Map<String, String> readNotice(String header, String writetime) {
-        AdminInfo admin = adminRepository.findAll().getFirst();
+        AdminInfo admin = adminRepository.findAll().get(0);
+        // AdminInfo admin = adminRepository.findAll().getFirst();
 
         if (admin != null) {
             List<NoticeInfo> list = admin.getNotice();
