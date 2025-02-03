@@ -2,16 +2,25 @@ spring:
   application:
     name: back
   jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://aivle-bigp-18-db.postgres.database.azure.com:5432/postgres?ssl=false
-    username: aivlePostgres@aivle-bigp-18-db
-    password: ssss1185!
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:sqlite:mydb.db
+    driver-class-name: org.sqlite.JDBC
+    username: admin
+    password: admin
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+  #   properties:
+  #     hibernate:
+  #       dialect: org.hibernate.dialect.PostgreSQLDialect
+  # datasource:
+  #   url: jdbc:postgresql://aivle-bigp-18-db.postgres.database.azure.com:5432/postgres?ssl=false
+  #   username: aivlePostgres@aivle-bigp-18-db
+  #   password: ssss1185!
+  #   driver-class-name: org.postgresql.Driver
   mail:
     host: smtp.naver.com
     port: 587
