@@ -5,14 +5,14 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://aivle-bigp-18-db.postgres.database.azure.com:5432/postgres?serverTimezone=Asia/Seoul
-    username: aivlePostgres
-    password: ssss1185!
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
   mail:
     host: smtp.naver.com
     port: 587
-    username: wnwoduq@naver.com
-    password: dhrtus56
+    username: ${MAILUSER}
+    password: ${MAILPASS}
     properties:
       mail:
         smtp:
@@ -20,14 +20,14 @@ spring:
           starttls:
             enable: false
 jwt:
-  secret: wefewfewfwefqwdqwdqwfwef
+  secret: ${JWT_SECRET}
 
 admin:
-  id: wnwoduq@naver.com
-  password: string@123
+  id: ${ADMIN_ID}
+  password: ${ADMIN_PASS}
 
 ai:
-  protocols: http
+  protocols: ${AI_PROTOCOLS}
 chatai:
-  host: chatai
-  port: 8001
+  host: ${CHATAI_HOST}
+  port: ${CHATAI_PORT}
