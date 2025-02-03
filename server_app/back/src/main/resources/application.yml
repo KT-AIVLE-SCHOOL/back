@@ -19,7 +19,6 @@ spring:
           auth: true
           starttls:
             enable: false
-
 jwt:
   secret: ${JWT_SECRET}
 
