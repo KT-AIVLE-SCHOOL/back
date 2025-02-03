@@ -5,7 +5,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul
+    url: jdbc:postgresql://aivle-bigp-18-db.postgres.database.azure.com:5432/postgres?serverTimezone=Asia/Seoul
     username: ${DB_USER}
     password: ${DB_PASS}
   mail:
