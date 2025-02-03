@@ -38,13 +38,12 @@ public class BabyEmotionService {
         BabyInfo baby = babyService.getBabyInfo(accessToken);
 
         if (baby != null) {
-            List<BabyEmotion> emotion = baby.getBabyEmotions();
-            // List<BabyEmotion> emotion = baby.getBabyEmotions().reversed();
+            List<BabyEmotion> emotion = baby.getBabyEmotions().reversed();
             if (emotion != null) {
                 List<GetBabyEmotionInfoApiDto.BabyRecently> emotionsMap = emotion.stream()
                     .map(e -> new GetBabyEmotionInfoApiDto.BabyRecently(e.getCheckTime(), e.getEmotion()))
-                    .collect(Collectors.toList());
-                    // .reversed();
+                    .collect(Collectors.toList())
+                    .reversed();
                 
                 List<GetBabyEmotionInfoApiDto.BabyRecently> recentlys = emotionsMap.stream()
                     .limit(15)
