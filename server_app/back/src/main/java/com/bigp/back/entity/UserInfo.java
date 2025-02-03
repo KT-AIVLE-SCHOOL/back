@@ -1,13 +1,25 @@
 package com.bigp.back.entity;
 
+import java.util.List;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,22 +30,26 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private int appId;
-    // 사용자 이메일
-    private String email;
-    // social일 때는 access token, 기본 가입일 때는 password
+    private String username;
     private String password;
-    // 0: 기본 가입, 1: kakao, 2: naver
-    private Short joinMethods;
-    // jwt 토큰
+    private String email;
     private String accessToken;
     private String refreshToken;
+    private String aliasname;
+    
+    @JdbcTypeCode(SqlTypes.VARBINARY)
+    @Column(columnDefinition="bytea")
+    private byte[] profileImage;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="baby")
+    @OneToOne(fetch=FetchType.LAZY)
     @JsonManagedReference
-    private List<BabyInfo> babyInfoList;
+    private BabyInfo babyInfo;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="chat")
+    @OneToOne(fetch=FetchType.LAZY)
+    @JsonManagedReference
+    private ConfigInfo configInfo;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="chat", fetch=FetchType.LAZY)
     @JsonManagedReference
     private List<ChatInfo> chatInfoList;
 }

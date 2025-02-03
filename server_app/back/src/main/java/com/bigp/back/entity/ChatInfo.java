@@ -1,10 +1,20 @@
 package com.bigp.back.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
@@ -15,12 +25,9 @@ public class ChatInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    // chat 질문 시간
     private Date requestTime;
-    // 질문
-    private String request;
-    // 응답
-    private String response;
+    private List<String> request;
+    private List<String> response;
 
     @ManyToOne
     @JoinColumn(name="chat_id")

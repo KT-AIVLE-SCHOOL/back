@@ -1,0 +1,31 @@
+package com.bigp.back.dto.admin;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+public class DeleteNoticeApiDto {
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class RequestBody {
+        private String accessToken;
+        private String header;
+        private String writetime;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class SuccessResponse {
+        private boolean success;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class ErrorResponse {
+        private boolean success;
+        private String message;
+    }
+}
