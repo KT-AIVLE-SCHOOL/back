@@ -1,7 +1,6 @@
 package com.bigp.back.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,8 @@ public class ChatInfoService {
             ChatInfo chat = null;
 
             if (!chatList.isEmpty()) {
-                chat = chatList.getLast();
+                chat = chatList.get(0);
+                // chat = chatList.getLast();
             }
 
             if (chat != null) {
