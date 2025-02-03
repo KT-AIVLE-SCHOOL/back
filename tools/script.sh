@@ -1,2 +1,2 @@
 #!/bin/sh
-./gradlew bootRun --args="--server.port=8080"
+./gradlew bootRun --args="--server.port=80"
