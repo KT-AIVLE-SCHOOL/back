@@ -88,12 +88,10 @@ public class NoticeInfoService {
     }
 
     public List<Map<String, String>> getNoticeList() {
-        AdminInfo admin = adminRepository.findAll().get(0);
-        // AdminInfo admin = adminRepository.findAll().getFirst();
+        AdminInfo admin = adminRepository.findAll().getFirst();
 
         if (admin != null) {
-            List<NoticeInfo> list = admin.getNotice();
-            // List<NoticeInfo> list = admin.getNotice().reversed();
+            List<NoticeInfo> list = admin.getNotice().reversed();
 
             List<Map<String, String>> headerList = new ArrayList<>();
 
@@ -111,8 +109,7 @@ public class NoticeInfoService {
     }
 
     public Map<String, String> readNotice(String header, String writetime) {
-        AdminInfo admin = adminRepository.findAll().get(0);
-        // AdminInfo admin = adminRepository.findAll().getFirst();
+        AdminInfo admin = adminRepository.findAll().getFirst();
 
         if (admin != null) {
             List<NoticeInfo> list = admin.getNotice();

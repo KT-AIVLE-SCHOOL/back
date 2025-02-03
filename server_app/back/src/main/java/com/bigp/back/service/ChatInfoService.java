@@ -57,8 +57,7 @@ public class ChatInfoService {
             ChatInfo chat = null;
 
             if (!chatList.isEmpty()) {
-                chat = chatList.get(0);
-                // chat = chatList.getLast();
+                chat = chatList.getLast();
             }
 
             if (chat != null) {
