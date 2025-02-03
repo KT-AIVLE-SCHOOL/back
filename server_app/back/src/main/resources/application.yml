@@ -4,10 +4,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
   mail:
     host: smtp.naver.com
     port: 587
@@ -19,6 +23,7 @@ spring:
           auth: true
           starttls:
             enable: false
+
 jwt:
   secret: ${JWT_SECRET}
 
@@ -31,3 +36,5 @@ ai:
 chatai:
   host: ${CHATAI_HOST}
   port: ${CHATAI_PORT}
+emoteai:
+  host: ${EMOTEAI_HOST}

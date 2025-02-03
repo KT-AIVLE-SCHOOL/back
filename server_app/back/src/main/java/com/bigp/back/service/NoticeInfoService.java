@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.bigp.back.dto.AdminDTO;
 import com.bigp.back.entity.AdminInfo;
 import com.bigp.back.entity.NoticeInfo;
 import com.bigp.back.repository.AdminRepository;

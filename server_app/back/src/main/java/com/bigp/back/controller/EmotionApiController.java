@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("api/emotion")
 @RequiredArgsConstructor
 public class EmotionApiController {
-    @Value("${EMOTEAI_HOST}")
+    @Value("${emoteai.host}")
     private String aiHost;
 
     @GetMapping("/uploadAudio")
