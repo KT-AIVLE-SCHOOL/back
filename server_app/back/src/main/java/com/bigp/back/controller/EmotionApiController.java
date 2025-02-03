@@ -27,10 +27,9 @@ public class EmotionApiController {
     @Value("${EMOTEAI_HOST}")
     private String aiHost;
 
-    @GetMapping("/uploadAudioFront")
-    public ResponseEntity<?> uploadAudio(@RequestParam UploadAudioApiDto.RequestParameter param) {
-        String filename = param.getFilename();
-        byte[] audio = Base64.getDecoder().decode(param.getAudio());
+    @GetMapping("/uploadAudio")
+    public ResponseEntity<?> uploadAudio(@RequestParam(name="filename") String filename, @RequestParam(name="audio") String rawAudio) {
+        byte[] audio = Base64.getDecoder().decode(rawAudio);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
