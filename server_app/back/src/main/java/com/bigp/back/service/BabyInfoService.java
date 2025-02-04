@@ -32,8 +32,8 @@ public class BabyInfoService {
 
             babyInfo = new BabyInfo();
 
-            babyInfo.setBabyname("입력해주세요");
-            babyInfo.setBabybirth(transDate.formatDateYMD(new Date()));
+            babyInfo.setBabyname("");
+            babyInfo.setBabybirth("");
             babyRepository.save(babyInfo);
             userInfo.setBabyInfo(babyInfo);
             userRepository.save(userInfo);

@@ -25,7 +25,7 @@ public class ConfigInfoService {
                 configRepository.delete(configInfo);
             configInfo = new ConfigInfo();
 
-            configInfo.setAlarm(false);
+            configInfo.setAlarm(true);
             configInfo.setDataeliminateduration(12);
             configRepository.save(configInfo);
             userInfo.setConfigInfo(configInfo);
