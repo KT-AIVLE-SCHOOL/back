@@ -26,9 +26,7 @@ public class ConfigInfoService {
             configInfo = new ConfigInfo();
 
             configInfo.setAlarm(false);
-            configInfo.setCoretimeend(10);
-            configInfo.setCoretimestart(7);
-            configInfo.setDataeliminateduration(14);
+            configInfo.setDataeliminateduration(12);
             configRepository.save(configInfo);
             userInfo.setConfigInfo(configInfo);
             userRepository.save(userInfo);
@@ -44,8 +42,6 @@ public class ConfigInfoService {
             ConfigInfo config = user.getConfigInfo();
             if (config != null) {
                 config.setAlarm(info.getAlarm());
-                config.setCoretimestart(info.getCoretimestart());
-                config.setCoretimeend(info.getCoretimeend());
                 config.setDataeliminateduration(info.getDateeliminateduration());
                 configRepository.save(config);
                 return true;

@@ -55,7 +55,7 @@ public class ConfigApiController {
                     ConfigInfo config = user.getConfigInfo();
 
                     if (baby != null && config != null) {
-                        return ResponseEntity.ok(new GetSettingInfoApiDto.SuccessResponse(true, config.isAlarm(), baby.getBabyname(), baby.getBabybirth(), config.getDataeliminateduration(), config.getCoretimestart(), config.getCoretimeend()));
+                        return ResponseEntity.ok(new GetSettingInfoApiDto.SuccessResponse(true, config.isAlarm(), baby.getBabyname(), baby.getBabybirth(), config.getDataeliminateduration()));
                     }
                 }
             }
