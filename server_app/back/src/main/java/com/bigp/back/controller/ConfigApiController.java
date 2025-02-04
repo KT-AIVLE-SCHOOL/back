@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bigp.back.dto.AdminDTO;
 import com.bigp.back.dto.UserDTO;
 import com.bigp.back.dto.config.DeleteUserApiDto;
 import com.bigp.back.dto.config.GetAliasNameApiDto;
@@ -110,11 +111,20 @@ public class ConfigApiController {
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
                 UserInfo user = userService.getUserInfo("accessToken", accessToken);
+                AdminInfo admin = adminInfoService.getAdminInfo(accessToken);
                 if (user != null) {
                     UserDTO.UserInfo userDto = new UserDTO.UserInfo();
 
                     userDto.setAccessToken(accessToken + ".logout");
                     boolean isUpdate = userService.updateUser("accessToken", accessToken, userDto);
+
+                    if (isUpdate)
+                        return ResponseEntity.ok(new LogoutApiDto.SuccessResponse(true));
+                } else if (admin != null) {
+                    AdminDTO.AdminInfo adminInfo = new AdminDTO.AdminInfo();
+
+                    adminInfo.setAccessToken(accessToken + ".logout");
+                    boolean isUpdate = adminInfoService.updateAdminInfo("accessToken", accessToken, adminInfo);
 
                     if (isUpdate)
                         return ResponseEntity.ok(new LogoutApiDto.SuccessResponse(true));
