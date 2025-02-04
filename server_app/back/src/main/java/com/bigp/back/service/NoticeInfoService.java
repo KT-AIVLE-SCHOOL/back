@@ -95,11 +95,12 @@ public class NoticeInfoService {
 
             List<Map<String, String>> headerList = new ArrayList<>();
 
-            for (NoticeInfo notice: list) {
+            for (int i = 0; i < list.size(); i++) {
                 Map<String, String> sendList = new HashMap<>();
 
-                sendList.put("header", notice.getHeader());
-                sendList.put("time", transDate.formatDateYMDHMS(notice.getWritetime()));
+                sendList.put("id", String.valueOf(i));
+                sendList.put("header", list.get(i).getHeader());
+                sendList.put("time", transDate.formatDateYMDHMS(list.get(i).getWritetime()));
 
                 headerList.add(sendList);
             }
