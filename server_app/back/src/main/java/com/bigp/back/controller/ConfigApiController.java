@@ -22,9 +22,11 @@ import com.bigp.back.dto.config.SetAliasNameApiDto;
 import com.bigp.back.dto.config.SetPassApiDto;
 import com.bigp.back.dto.config.SetProfileImageApiDto;
 import com.bigp.back.dto.config.SetSettingInfoApiDto;
+import com.bigp.back.entity.AdminInfo;
 import com.bigp.back.entity.BabyInfo;
 import com.bigp.back.entity.ConfigInfo;
 import com.bigp.back.entity.UserInfo;
+import com.bigp.back.service.AdminInfoService;
 import com.bigp.back.service.BabyInfoService;
 import com.bigp.back.service.ConfigInfoService;
 import com.bigp.back.service.UserInfoService;
@@ -40,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class ConfigApiController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserInfoService userService;
+    private final AdminInfoService adminInfoService;
     private final BabyInfoService babyService;
     private final ConfigInfoService configService;
 
