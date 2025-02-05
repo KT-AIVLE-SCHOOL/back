@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import com.bigp.back.dto.UserDTO;
@@ -62,6 +63,8 @@ public class ChatInfoService {
 
             if (chat != null) {
                 Map<String, Object> data = new HashMap<>();
+                Hibernate.initialize(chat.getRequest());
+                Hibernate.initialize(chat.getResponse());
                 data.put("request", chat.getRequest());
                 data.put("response", chat.getResponse());
                 data.put("time", chat.getRequestTime());
