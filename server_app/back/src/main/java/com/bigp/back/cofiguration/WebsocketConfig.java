@@ -26,6 +26,7 @@ import com.bigp.back.utils.DateFormatter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -81,6 +82,7 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
             session.close();
     }
 
+    @Transactional
     private void handleGreeting(WebSocketSession session, ObjectNode questionMes, SessionData sessionData) throws IOException {
         sessionData.accessToken = questionMes.get("accessToken").asText();
         boolean success = userService.isUser("accessToken", sessionData.accessToken);

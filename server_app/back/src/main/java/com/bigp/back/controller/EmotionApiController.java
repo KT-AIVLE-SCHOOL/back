@@ -4,6 +4,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
@@ -26,6 +30,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("api/emotion")
@@ -77,4 +85,32 @@ public class EmotionApiController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UploadAudioApiDto.ErrorResponse(false, "서버 내부 오류"));
         }
     }
+
+    @PostMapping("/uploadAudioWiFi")
+    public ResponseEntity<?> uploadAudioWiFi(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            long fileSize = file.getSize();
+            float duration = getAudioDuration(file);
+
+            System.out.println(String.format("fileSize: %d, Duration: %f", fileSize, duration));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private float getAudioDuration(MultipartFile file) throws Exception {
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file.getInputStream());
+        AudioFormat format = audioInputStream.getFormat();
+        long audioFileLength = file.getSize();
+        int frameSize = format.getFrameSize();
+        float frameRate = format.getFrameRate();
+        float durationInSeconds = (audioFileLength / (frameSize * frameRate));
+        return durationInSeconds;
+    }
+    
 }
