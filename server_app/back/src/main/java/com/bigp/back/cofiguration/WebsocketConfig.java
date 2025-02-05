@@ -104,7 +104,7 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private void handleQuestion(WebSocketSession session, ObjectNode questionsMes, SessionData sessionData) throws IOException {
         String question = questionsMes.get("data").asText();
-        String url = String.format("%s://%s:%s/api/getAnswer?question=%s", aiProtocol, chataiHost, chataiPort, question);
+        String url = String.format("%s://%s/api/getAnswer?question=%s", aiProtocol, chataiHost, question);
         String answer = restTemplate.getForObject(url, Map.class).get("answer").toString();
 
         sessionData.que.add(question);
