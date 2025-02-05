@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("api/emotion")
 @RequiredArgsConstructor
 public class EmotionApiController {
+    @Value("${ai.protocols}")
+    private String aiProtocols;
     @Value("${emoteai.host}")
     private String aiHost;
 
@@ -54,7 +56,7 @@ public class EmotionApiController {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-            "http://" + aiHost + ":8001/api/uploadAudio",
+            aiProtocols + "://" + aiHost + "/api/uploadAudio",
             HttpMethod.POST,
             requestEntity,
             String.class
