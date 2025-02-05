@@ -71,7 +71,5 @@ public class UserDTO {
     public static class ConfigInfo {
         private Boolean alarm;
         private int dateeliminateduration;
-        private int coretimestart;
-        private int coretimeend;
     }
 }
