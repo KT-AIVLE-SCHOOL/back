@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-public class UploadAudioApiDto {
+public class PostAnswerApiDto {
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class RequestParameter {
-        private String filename;
-        private String audio;
+    public static class RequestBody {
+        private String accessToken;
+        private int emotion;
     }
 
     @Getter
@@ -18,7 +18,6 @@ public class UploadAudioApiDto {
     @AllArgsConstructor
     public static class SuccessResponse {
         private boolean success;
-        private int emotion;
     }
 
     @Getter
