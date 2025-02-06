@@ -26,7 +26,7 @@ public class DashboardApiController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/getBabyInfo")
-    public ResponseEntity<?> getBabyInfo(@CookieValue String accessToken) {
+    public ResponseEntity<?> getBabyInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
                 Map<String, String> info = babyEmotionService.getBabyInfo(accessToken);
@@ -45,7 +45,7 @@ public class DashboardApiController {
     }
     
     @GetMapping("/getBabyEmotionInfo")
-    public ResponseEntity<?> getBabyEmotionInfo(@CookieValue String accessToken) {
+    public ResponseEntity<?> getBabyEmotionInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
             if (jwtTokenProvider.isExpired(accessToken)) {
                 GetBabyEmotionInfoApiDto.RawData data = babyEmotionService.getBabyEmotionInfo(accessToken);
