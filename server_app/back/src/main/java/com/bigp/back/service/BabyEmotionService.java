@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.bigp.back.dto.UserDTO;
 import com.bigp.back.dto.dashboard.GetBabyEmotionInfoApiDto;
 import com.bigp.back.entity.BabyEmotion;
 import com.bigp.back.entity.BabyInfo;
@@ -30,7 +31,7 @@ public class BabyEmotionService {
     public Map<String, String> getBabyInfo(String accessToken) {
         Map<String, String> info = new HashMap<>();
 
-        BabyInfo baby = babyService.getBabyInfo(accessToken);
+        UserDTO.BabyInfo baby = babyService.getBabyInfo(accessToken);
 
         if (baby != null) {
             info.put("babyName", baby.getBabyname());
@@ -43,10 +44,10 @@ public class BabyEmotionService {
     }
     
     public GetBabyEmotionInfoApiDto.RawData getBabyEmotionInfo(String accessToken) {
-        BabyInfo baby = babyService.getBabyInfo(accessToken);
+        BabyInfo baby = babyService.getEntity(accessToken);
 
         if (baby != null) {
-            List<BabyEmotion> emotion = baby.getBabyEmotions().reversed();
+            List<BabyEmotion> emotion = baby.getBabyEmotions();
             if (emotion != null) {
                 List<GetBabyEmotionInfoApiDto.BabyRecently> emotionsMap = emotion.stream()
                     .map(e -> new GetBabyEmotionInfoApiDto.BabyRecently(e.getCheckTime(), e.getEmotion()))
@@ -87,7 +88,7 @@ public class BabyEmotionService {
 
     @Transactional
     public boolean insertBabyEmotionInfo(String accessToken, int emotion) {
-        BabyInfo baby = babyService.getBabyInfo(accessToken);
+        BabyInfo baby = babyService.getEntity(accessToken);
 
         if (baby != null) {
             BabyEmotion emotionEntity = new BabyEmotion();

@@ -20,9 +20,10 @@ public class BabyInfoService {
     private final UserRepository userRepository;
     private final BabyRepository babyRepository;
     private final DateFormatter transDate;
+    private final AESService aesService;
 
     public boolean insertBabyInfo(String accessToken) {
-        UserInfo userInfo = userInfoService.getUserInfo("accessToken", accessToken);
+        UserInfo userInfo = userInfoService.getEntity("accessToken", accessToken);
 
         if (userInfo != null) {
             BabyInfo babyInfo = userInfo.getBabyInfo();
@@ -43,14 +44,14 @@ public class BabyInfoService {
     }
 
     public boolean updateBabyInfo(String accessToken, UserDTO.BabyInfo babyDto) {
-        UserInfo userInfo = userInfoService.getUserInfo("accessToken", accessToken);
+        UserInfo userInfo = userInfoService.getEntity("accessToken", accessToken);
 
         if (userInfo != null) {
             BabyInfo babyInfo = userInfo.getBabyInfo();
 
             if (babyInfo != null) {
-                babyInfo.setBabyname(babyDto.getBabyname());
-                babyInfo.setBabybirth(babyDto.getBabybirth());
+                babyInfo.setBabyname(aesService.encryptInfo(babyDto.getBabyname()));
+                babyInfo.setBabybirth(aesService.encryptInfo(babyDto.getBabybirth()));
                 babyRepository.save(babyInfo);
                 return true;
             }
@@ -58,18 +59,29 @@ public class BabyInfoService {
         return false;
     }
 
-    public BabyInfo getBabyInfo(String accessToken) {
-        UserInfo userInfo = userInfoService.getUserInfo("accessToken", accessToken);
+    public UserDTO.BabyInfo getBabyInfo(String accessToken) {
+        UserInfo userInfo = userInfoService.getEntity("accessToken", accessToken);
 
         if (userInfo != null) {
             BabyInfo babyInfo = userInfo.getBabyInfo();
-            return babyInfo;
+            UserDTO.BabyInfo baby = new UserDTO.BabyInfo(aesService.decryptInfo(babyInfo.getBabyname()), aesService.decryptInfo(babyInfo.getBabybirth()));
+            return baby;
+        }
+        return null;
+    }
+
+    public BabyInfo getEntity(String accessToken) {
+        UserInfo userInfo = userInfoService.getEntity("accessToken", accessToken);
+
+        if (userInfo != null) {
+            BabyInfo baby = userInfo.getBabyInfo();
+            return baby;
         }
         return null;
     }
 
     public boolean deleteBabyInfo(String accessToken) {
-        UserInfo userInfo = userInfoService.getUserInfo("accessToken", accessToken);
+        UserInfo userInfo = userInfoService.getEntity("accessToken", accessToken);
 
         if (userInfo != null) {
             BabyInfo babyInfo = userInfo.getBabyInfo();

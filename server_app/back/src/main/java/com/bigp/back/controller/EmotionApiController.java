@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.bigp.back.dto.emotion.PostAnswerApiDto;
 import com.bigp.back.service.BabyEmotionService;
+import com.bigp.back.utils.CheckUtils;
 import com.bigp.back.utils.JwtTokenProvider;
 
 
@@ -22,6 +23,7 @@ import com.bigp.back.utils.JwtTokenProvider;
 public class EmotionApiController {
     private final JwtTokenProvider jwtTokenProvider;
     private final BabyEmotionService emotionService;
+    private final CheckUtils checkUtils;
 
     @PostMapping("/postEmotion")
     public ResponseEntity<?> postEmotion(@RequestBody PostAnswerApiDto.RequestBody request) {
@@ -29,7 +31,7 @@ public class EmotionApiController {
         int emotion = request.getEmotion();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
                 if (emotionService.insertBabyEmotionInfo(accessToken, emotion))
                     return ResponseEntity.ok(new PostAnswerApiDto.SuccessResponse(true));
                 else

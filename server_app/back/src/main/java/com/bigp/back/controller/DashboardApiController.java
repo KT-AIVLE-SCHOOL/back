@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bigp.back.dto.dashboard.GetBabyEmotionInfoApiDto;
 import com.bigp.back.dto.dashboard.GetBabyInfoApiDto;
 import com.bigp.back.service.BabyEmotionService;
+import com.bigp.back.utils.CheckUtils;
 import com.bigp.back.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,12 @@ import lombok.RequiredArgsConstructor;
 public class DashboardApiController {
     private final BabyEmotionService babyEmotionService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CheckUtils checkUtils;
 
     @GetMapping("/getBabyInfo")
     public ResponseEntity<?> getBabyInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
                 Map<String, String> info = babyEmotionService.getBabyInfo(accessToken);
 
                 if (info.get("code").equals("200"))
@@ -47,7 +49,7 @@ public class DashboardApiController {
     @GetMapping("/getBabyEmotionInfo")
     public ResponseEntity<?> getBabyEmotionInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
                 GetBabyEmotionInfoApiDto.RawData data = babyEmotionService.getBabyEmotionInfo(accessToken);
 
                 if (data.getCode().equals("200"))
