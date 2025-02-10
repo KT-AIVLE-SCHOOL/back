@@ -73,7 +73,7 @@ public class BabyEmotionService {
                             .max(Map.Entry.comparingByValue()).orElse(null);
                         
                         return new GetBabyEmotionInfoApiDto.BabyEmotionOrderByTime(hour,
-                            maxEmotion != null ? maxEmotion.getKey() : 0,
+                            maxEmotion != null ? maxEmotion.getKey() : -1,
                             maxEmotion != null ? (float) maxEmotion.getValue() / total : 0
                         );
                     })
