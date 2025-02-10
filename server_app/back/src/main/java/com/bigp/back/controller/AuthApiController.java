@@ -20,8 +20,6 @@ import com.bigp.back.dto.auth.FindPassApiDto;
 import com.bigp.back.dto.auth.LoginApiDto;
 import com.bigp.back.dto.auth.RegisterApiDto;
 import com.bigp.back.dto.auth.SendVerificationCodeApiDto;
-import com.bigp.back.entity.UserInfo;
-import com.bigp.back.service.AESService;
 import com.bigp.back.service.AdminInfoService;
 import com.bigp.back.service.BabyInfoService;
 import com.bigp.back.service.ConfigInfoService;
