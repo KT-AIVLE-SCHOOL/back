@@ -32,6 +32,7 @@ public class UserInfo {
     private Long id;
     private String username;
     private String password;
+    @Column(unique=true)
     private String email;
     private String accessToken;
     private String refreshToken;

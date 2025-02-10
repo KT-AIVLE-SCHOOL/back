@@ -23,7 +23,7 @@ public class UserInfoService {
     private final AESService aesService;
 
     public boolean insertUser(RegisterApiDto.RequestBody register) {
-        UserInfo user = userRepository.findByEmail(register.getEmail());
+        UserInfo user = userRepository.findByEmail(aesService.encryptInfo(register.getEmail()));
         if (user == null) {
             user = new UserInfo();
             String encodePassword = passwordEncoder.encode(register.getPassword());
@@ -110,7 +110,6 @@ public class UserInfoService {
         user.setPassword(userInfo.getPassword());
         user.setRefreshToken(userInfo.getRefreshToken());
         user.setUsername(aesService.decryptInfo(userInfo.getUsername()));
-        user.setProfileImage(Base64.getEncoder().encodeToString(userInfo.getProfileImage()));
         return user;
     }
 
