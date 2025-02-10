@@ -118,8 +118,8 @@ public class ConfigApiController {
                 UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
                 AdminInfo admin = adminInfoService.getAdminInfo(accessToken);
                 if (user != null) {
-
                     user.setAccessToken(accessToken + ".logout");
+                    user.setPassword(null);
                     boolean isUpdate = userService.updateUser("accessToken", accessToken, user);
 
                     if (isUpdate)
@@ -243,7 +243,6 @@ public class ConfigApiController {
                 UserDTO.UserInfo userDto = new UserDTO.UserInfo();
 
                 userDto.setAliasname(name);
-
                 boolean isUpdate = userService.updateUser("accessToken", accessToken, userDto);
 
                 if (isUpdate)
