@@ -52,8 +52,11 @@ public class DashboardApiController {
             if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
                 GetBabyEmotionInfoApiDto.RawData data = babyEmotionService.getBabyEmotionInfo(accessToken);
 
-                if (data.getCode().equals("200"))
+                if (data.getCode().equals("200") && data.getBabyRecently().isEmpty()) {
+                    return ResponseEntity.ok(new GetBabyEmotionInfoApiDto.SuccessResponse(true, null, null));
+                } else if (data.getCode().equals("200")) {
                     return ResponseEntity.ok(new GetBabyEmotionInfoApiDto.SuccessResponse(true, data.getBabyRecently(), data.getBabyEmotionOrderByTime()));
+                }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new GetBabyEmotionInfoApiDto.ErrorResponse(false, "데이터가 없습니다"));
             }
