@@ -104,6 +104,8 @@ public class UserInfoService {
             userInfo = userRepository.findByAccessToken(value);
         else
             userInfo = userRepository.findByEmail(aesService.encryptInfo(value));
+        if (userInfo == null)
+            return null;
         user.setAccessToken(userInfo.getAccessToken());
         user.setAliasname(userInfo.getAliasname());
         user.setEmail(aesService.decryptInfo(userInfo.getEmail()));
