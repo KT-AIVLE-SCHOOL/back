@@ -21,7 +21,7 @@ public class UserDTO {
         private String email;
         private String password;
         private String aliasname;
-        private MultipartFile profileImage;
+        private String profileImage;
         private String accessToken;
         private String refreshToken;
     }
