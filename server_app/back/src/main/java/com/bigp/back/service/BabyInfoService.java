@@ -35,6 +35,7 @@ public class BabyInfoService {
 
             babyInfo.setBabyname("");
             babyInfo.setBabybirth("");
+            babyInfo.setBabyEmotions(null);
             babyRepository.save(babyInfo);
             userInfo.setBabyInfo(babyInfo);
             userRepository.save(userInfo);
