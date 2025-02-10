@@ -4,8 +4,11 @@ import java.security.SecureRandom;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.Query;
 
+@Component
 public class CheckUtils {
     public boolean checkEmail(String email) {
         String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
