@@ -62,7 +62,7 @@ public class UserInfoService {
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
 
         if (user != null) {
             if (update.getEmail() != null) {
@@ -119,7 +119,7 @@ public class UserInfoService {
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         return user;
     }
 
@@ -129,7 +129,7 @@ public class UserInfoService {
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         
         if (user == null)
             return false;
@@ -142,7 +142,7 @@ public class UserInfoService {
         if (key.equals("accessToken")) {
             user = userRepository.findByAccessToken(value);
         } else {
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         }
 
         try {
@@ -163,7 +163,7 @@ public class UserInfoService {
         if (key.equals("accessToken")) {
             user = userRepository.findByAccessToken(value);
         } else {
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         }
 
         if (user != null) {
