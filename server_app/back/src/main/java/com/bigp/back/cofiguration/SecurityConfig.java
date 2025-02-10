@@ -13,10 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${encryption.key}")
+    @Value("${encryption.key:welfknklewfnklwf}")
     private String enctyptionKey;
 
-    @Value("${encryption.salt}")
+    @Value("${encryption.salt:woefhnqoinfoqfon}")
     private String salt;
 
     @Bean
