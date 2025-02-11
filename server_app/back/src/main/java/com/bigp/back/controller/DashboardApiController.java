@@ -53,7 +53,7 @@ public class DashboardApiController {
                 GetBabyEmotionInfoApiDto.RawData data = babyEmotionService.getBabyEmotionInfo(accessToken);
 
                 if (data.getCode().equals("200") && data.getBabyRecently().isEmpty()) {
-                    return ResponseEntity.ok(new GetBabyEmotionInfoApiDto.SuccessResponse(false, null, null));
+                    return ResponseEntity.ok(new GetBabyEmotionInfoApiDto.SuccessResponse(true, null, null));
                 } else if (data.getCode().equals("200")) {
                     return ResponseEntity.ok(new GetBabyEmotionInfoApiDto.SuccessResponse(true, data.getBabyRecently(), data.getBabyEmotionOrderByTime()));
                 }
