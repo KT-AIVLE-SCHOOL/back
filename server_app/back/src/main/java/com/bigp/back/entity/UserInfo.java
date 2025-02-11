@@ -42,11 +42,11 @@ public class UserInfo {
     @Column(columnDefinition="bytea")
     private byte[] profileImage;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private BabyInfo babyInfo;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private ConfigInfo configInfo;
 
