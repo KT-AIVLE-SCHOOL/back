@@ -26,6 +26,7 @@ import com.bigp.back.utils.DateFormatter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -81,6 +82,7 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
             session.close();
     }
 
+    @Transactional
     private void handleGreeting(WebSocketSession session, ObjectNode questionMes, SessionData sessionData) throws IOException {
         sessionData.accessToken = questionMes.get("accessToken").asText();
         boolean success = userService.isUser("accessToken", sessionData.accessToken);
@@ -104,7 +106,7 @@ class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private void handleQuestion(WebSocketSession session, ObjectNode questionsMes, SessionData sessionData) throws IOException {
         String question = questionsMes.get("data").asText();
-        String url = String.format("%s://%s:%s/api/getAnswer?question=%s", aiProtocol, chataiHost, chataiPort, question);
+        String url = String.format("%s://%s/api/getAnswer?question=%s", aiProtocol, chataiHost, question);
         String answer = restTemplate.getForObject(url, Map.class).get("answer").toString();
 
         sessionData.que.add(question);

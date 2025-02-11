@@ -20,7 +20,6 @@ import com.bigp.back.dto.auth.FindPassApiDto;
 import com.bigp.back.dto.auth.LoginApiDto;
 import com.bigp.back.dto.auth.RegisterApiDto;
 import com.bigp.back.dto.auth.SendVerificationCodeApiDto;
-import com.bigp.back.entity.UserInfo;
 import com.bigp.back.service.AdminInfoService;
 import com.bigp.back.service.BabyInfoService;
 import com.bigp.back.service.ConfigInfoService;
@@ -43,6 +42,7 @@ public class AuthApiController {
     private final AdminInfoService adminService;
     private final MailService mailService;
     private final VerificationCodeService verificationSerivce;
+    private final CheckUtils checkUtils;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginApiDto.RequestBody request) {
@@ -50,6 +50,9 @@ public class AuthApiController {
         String password = request.getPassword();
 
         try {
+            if (checkUtils.checkQuery(email) || checkUtils.checkQuery(password))
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new LoginApiDto.ErrorResponse(false, "이메일 또는 비밀번호 오류"));
             if (userService.isMatchedUser(email, password)) {
                 UserDTO.UserInfo update = new UserDTO.UserInfo();
                 String newAccessToken = tokenProvider.createToken(email, true);
@@ -78,14 +81,15 @@ public class AuthApiController {
         String username = request.getUsername();
         String password = request.getPassword();
 
-        if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty()
+            || checkUtils.checkQuery(email) || checkUtils.checkQuery(password) || checkUtils.checkQuery(username)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new RegisterApiDto.ErrorResponse(false, "인자가 정확하지 않습니다"));
         }
 
         try {
             if (!adminService.isMatchedAdmin(email, password) && userService.insertUser(request)) {
-                UserInfo user = userService.getUserInfo("email", email);
+                UserDTO.UserInfo user = userService.getUserInfo("email", email);
                 String accessToken = user.getAccessToken();
                 String refreshToken = user.getRefreshToken();
                 babyService.insertBabyInfo(accessToken);
@@ -184,9 +188,8 @@ public class AuthApiController {
     
     @GetMapping("/findEmail")
     public ResponseEntity<?> findEmail(@RequestParam String email) {
-        CheckUtils util = new CheckUtils();
 
-        if (!util.checkEmail(email))
+        if (!checkUtils.checkEmail(email) || checkUtils.checkQuery(email))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new FindEmailApiDto.ErrorResponse(false, "잘못된 이메일 형식입니다"));
         
@@ -203,21 +206,18 @@ public class AuthApiController {
     
     @GetMapping("/findPass")
     public ResponseEntity<?> findPass(@CookieValue(name="accessToken", required=true) String accessToken) {
-        CheckUtils util = new CheckUtils();
-        UserDTO.UserInfo userDto = new UserDTO.UserInfo();
-
         try {
-            if (!tokenProvider.isExpired(accessToken))
+            if (!tokenProvider.isExpired(accessToken) || checkUtils.checkQuery(accessToken))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new FindPassApiDto.ErrorResponse(false, "유효하지 않은 인증수단"));
-            UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
             if (user == null)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new FindPassApiDto.ErrorResponse(false, "존재하지 않는 이메일입니다"));
             String email = user.getEmail();
-            String password = util.createPass();
-            userDto.setPassword(password);
-            userService.updateUser("email", email, userDto);
+            String password = checkUtils.createPass();
+            user.setPassword(password);
+            userService.updateUser("email", email, user);
             String subject = "[나비잠] 안녕하십니까 고객님. 임시 비밀번호 안내입니다.";
             String text = "<h3>나비잠을 사용해주시는 고객님. 대단히 감사합니다.</h3>\n<p>임시 비밀번호는 다음과 같습니다.</p>\n<h4>" + password + "</h4>\n<p>임시 비밀번호로 로그인 하신 후, 반드시 비밀번호 변경을 통해 비밀번호를 바꿔주시면 대단히 감사하겠습니다.</p>";
             mailService.sendMail(email, subject, text);

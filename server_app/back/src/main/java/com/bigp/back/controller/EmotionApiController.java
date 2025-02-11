@@ -1,49 +1,46 @@
 package com.bigp.back.controller;
 
-import java.util.Base64;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
-import com.bigp.back.dto.emotion.UploadAudioApiDto;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.bigp.back.dto.emotion.PostAnswerApiDto;
+import com.bigp.back.service.BabyEmotionService;
+import com.bigp.back.utils.CheckUtils;
+import com.bigp.back.utils.JwtTokenProvider;
 
 
 @RestController
 @RequestMapping("api/emotion")
 @RequiredArgsConstructor
 public class EmotionApiController {
-    @Value("${emoteai.host}")
-    private String aiHost;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final BabyEmotionService emotionService;
+    private final CheckUtils checkUtils;
 
-    @GetMapping("/uploadAudio")
-    public ResponseEntity<?> uploadAudio(@RequestParam(name="filename") String filename, @RequestParam(name="audio") String rawAudio) {
-        byte[] audio = Base64.getDecoder().decode(rawAudio);
+    @PostMapping("/postEmotion")
+    public ResponseEntity<?> postEmotion(@RequestBody PostAnswerApiDto.RequestBody request) {
+        String accessToken = request.getAccessToken();
+        int emotion = request.getEmotion();
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-
-        HttpEntity<byte[]> requestEntity = new HttpEntity<>(audio, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-            aiHost,
-            HttpMethod.POST,
-            requestEntity,
-            String.class
-        );
-
-        return ResponseEntity.ok(new UploadAudioApiDto.SuccessResponse(true, 1));
+        try {
+            System.out.println("insert postEmotion");
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                if (emotionService.insertBabyEmotionInfo(accessToken, emotion))
+                    return ResponseEntity.ok(new PostAnswerApiDto.SuccessResponse(true));
+                else
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new PostAnswerApiDto.ErrorResponse(false, "아이 정보가 없습니다"));
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new PostAnswerApiDto.ErrorResponse(false, "유효하지 않은 인증수단"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new PostAnswerApiDto.ErrorResponse(false, "내부 서버 오류"));
+        }
     }
 }

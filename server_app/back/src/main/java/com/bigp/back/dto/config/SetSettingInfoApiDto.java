@@ -14,8 +14,6 @@ public class SetSettingInfoApiDto {
         private String babyName;
         private String babyBirth;
         private Integer dataEliminateDuration;
-        private Integer coreTimeStart;
-        private Integer coreTimeEnd;
     }
 
     @Getter

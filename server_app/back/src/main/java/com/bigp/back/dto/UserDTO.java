@@ -21,7 +21,7 @@ public class UserDTO {
         private String email;
         private String password;
         private String aliasname;
-        private MultipartFile profileImage;
+        private String profileImage;
         private String accessToken;
         private String refreshToken;
     }
@@ -71,7 +71,5 @@ public class UserDTO {
     public static class ConfigInfo {
         private Boolean alarm;
         private int dateeliminateduration;
-        private int coretimestart;
-        private int coretimeend;
     }
 }

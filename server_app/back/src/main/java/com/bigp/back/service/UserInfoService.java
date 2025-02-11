@@ -20,17 +20,18 @@ public class UserInfoService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AESService aesService;
 
     public boolean insertUser(RegisterApiDto.RequestBody register) {
-        UserInfo user = userRepository.findByEmail(register.getEmail());
+        UserInfo user = userRepository.findByEmail(aesService.encryptInfo(register.getEmail()));
         if (user == null) {
             user = new UserInfo();
             String encodePassword = passwordEncoder.encode(register.getPassword());
             String accessToken = jwtTokenProvider.createToken(register.getEmail(), true);
             String refreshToken = jwtTokenProvider.createToken(register.getEmail(), false);
-            user.setEmail(register.getEmail());
+            user.setEmail(aesService.encryptInfo(register.getEmail()));
             user.setPassword(encodePassword);
-            user.setUsername(register.getUsername());
+            user.setUsername(aesService.encryptInfo(register.getUsername()));
             user.setAccessToken(accessToken);
             user.setRefreshToken(refreshToken);
             userRepository.save(user);
@@ -49,7 +50,7 @@ public class UserInfoService {
     }
 
     public boolean isMatchedUser(String email, String password) {
-        UserInfo user = userRepository.findByEmail(email);
+        UserInfo user = userRepository.findByEmail(aesService.encryptInfo(email));
 
         if (user != null)
             return passwordEncoder.matches(password, user.getPassword());
@@ -61,14 +62,14 @@ public class UserInfoService {
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
 
         if (user != null) {
             if (update.getEmail() != null) {
-                user.setEmail(update.getEmail());
+                user.setEmail(aesService.encryptInfo(update.getEmail()));
             }
             if (update.getUsername() != null) {
-                user.setUsername(update.getUsername());
+                user.setUsername(aesService.encryptInfo(update.getUsername()));
             }
             if (update.getPassword() != null) {
                 user.setPassword(passwordEncoder.encode(update.getPassword()));
@@ -95,13 +96,32 @@ public class UserInfoService {
         return false;
     }
 
-    public UserInfo getUserInfo(String key, String value) {
+    public UserDTO.UserInfo getUserInfo(String key, String value) {
+        UserInfo userInfo;
+        UserDTO.UserInfo user = new UserDTO.UserInfo();
+
+        if (key.equals("accessToken"))
+            userInfo = userRepository.findByAccessToken(value);
+        else
+            userInfo = userRepository.findByEmail(aesService.encryptInfo(value));
+        if (userInfo == null)
+            return null;
+        user.setAccessToken(userInfo.getAccessToken());
+        user.setAliasname(userInfo.getAliasname());
+        user.setEmail(aesService.decryptInfo(userInfo.getEmail()));
+        user.setPassword(userInfo.getPassword());
+        user.setRefreshToken(userInfo.getRefreshToken());
+        user.setUsername(aesService.decryptInfo(userInfo.getUsername()));
+        return user;
+    }
+
+    public UserInfo getEntity(String key, String value) {
         UserInfo user;
 
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         return user;
     }
 
@@ -111,7 +131,7 @@ public class UserInfoService {
         if (key.equals("accessToken"))
             user = userRepository.findByAccessToken(value);
         else
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         
         if (user == null)
             return false;
@@ -124,7 +144,7 @@ public class UserInfoService {
         if (key.equals("accessToken")) {
             user = userRepository.findByAccessToken(value);
         } else {
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         }
 
         try {
@@ -145,7 +165,7 @@ public class UserInfoService {
         if (key.equals("accessToken")) {
             user = userRepository.findByAccessToken(value);
         } else {
-            user = userRepository.findByEmail(value);
+            user = userRepository.findByEmail(aesService.encryptInfo(value));
         }
 
         if (user != null) {

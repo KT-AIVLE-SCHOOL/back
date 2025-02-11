@@ -1,7 +1,5 @@
 package com.bigp.back.controller;
 
-import java.util.Base64;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bigp.back.dto.AdminDTO;
 import com.bigp.back.dto.UserDTO;
 import com.bigp.back.dto.config.DeleteUserApiDto;
 import com.bigp.back.dto.config.GetAliasNameApiDto;
@@ -22,12 +21,16 @@ import com.bigp.back.dto.config.SetAliasNameApiDto;
 import com.bigp.back.dto.config.SetPassApiDto;
 import com.bigp.back.dto.config.SetProfileImageApiDto;
 import com.bigp.back.dto.config.SetSettingInfoApiDto;
+import com.bigp.back.entity.AdminInfo;
 import com.bigp.back.entity.BabyInfo;
 import com.bigp.back.entity.ConfigInfo;
 import com.bigp.back.entity.UserInfo;
+import com.bigp.back.service.AESService;
+import com.bigp.back.service.AdminInfoService;
 import com.bigp.back.service.BabyInfoService;
 import com.bigp.back.service.ConfigInfoService;
 import com.bigp.back.service.UserInfoService;
+import com.bigp.back.utils.CheckUtils;
 import com.bigp.back.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -40,22 +43,25 @@ import lombok.RequiredArgsConstructor;
 public class ConfigApiController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserInfoService userService;
+    private final AdminInfoService adminInfoService;
     private final BabyInfoService babyService;
     private final ConfigInfoService configService;
+    private final CheckUtils checkUtils;
+    private final AESService aesService;
 
     @GetMapping("/getSettingInfo")
     public ResponseEntity<?> getSettingInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserInfo user = userService.getEntity("accessToken", accessToken);
 
                 if (user != null) {
                     BabyInfo baby = user.getBabyInfo();
                     ConfigInfo config = user.getConfigInfo();
 
                     if (baby != null && config != null) {
-                        return ResponseEntity.ok(new GetSettingInfoApiDto.SuccessResponse(true, config.isAlarm(), baby.getBabyname(), baby.getBabybirth(), config.getDataeliminateduration(), config.getCoretimestart(), config.getCoretimeend()));
+                        return ResponseEntity.ok(new GetSettingInfoApiDto.SuccessResponse(true, config.isAlarm(), aesService.decryptInfo(baby.getBabyname()), aesService.decryptInfo(baby.getBabybirth()), config.getDataeliminateduration()));
                     }
                 }
             }
@@ -76,8 +82,9 @@ public class ConfigApiController {
         int dataEliminateDuration = request.getDataEliminateDuration();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)
+                && !checkUtils.checkQuery(babyName) && !checkUtils.checkQuery(babyBirth)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
                 if (user != null) {
                     UserDTO.BabyInfo baby = new UserDTO.BabyInfo();
                     UserDTO.ConfigInfo config = new UserDTO.ConfigInfo();
@@ -105,13 +112,21 @@ public class ConfigApiController {
         String accessToken = request.getAccessToken();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
+                AdminInfo admin = adminInfoService.getAdminInfo(accessToken);
                 if (user != null) {
-                    UserDTO.UserInfo userDto = new UserDTO.UserInfo();
+                    user.setAccessToken(accessToken + ".logout");
+                    user.setPassword(null);
+                    boolean isUpdate = userService.updateUser("accessToken", accessToken, user);
 
-                    userDto.setAccessToken(accessToken + ".logout");
-                    boolean isUpdate = userService.updateUser("accessToken", accessToken, userDto);
+                    if (isUpdate)
+                        return ResponseEntity.ok(new LogoutApiDto.SuccessResponse(true));
+                } else if (admin != null) {
+                    AdminDTO.AdminInfo adminInfo = new AdminDTO.AdminInfo();
+
+                    adminInfo.setAccessToken(accessToken + ".logout");
+                    boolean isUpdate = adminInfoService.updateAdminInfo("accessToken", accessToken, adminInfo);
 
                     if (isUpdate)
                         return ResponseEntity.ok(new LogoutApiDto.SuccessResponse(true));
@@ -130,8 +145,8 @@ public class ConfigApiController {
         String accessToken = request.getAccessToken();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
 
                 if (user != null) {
                     if (userService.deleteUser(accessToken))
@@ -150,11 +165,11 @@ public class ConfigApiController {
     public ResponseEntity<?> getProfileImage(@CookieValue(name="accessToken", required=true) String accessToken) {
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
 
                 if (user != null) {
-                    String profileImage = Base64.getEncoder().encodeToString(user.getProfileImage());
+                    String profileImage = user.getProfileImage();
                     return ResponseEntity.ok(new GetProfileImageApiDto.SuccessResponse(true, profileImage));
                 }
             }
@@ -167,7 +182,7 @@ public class ConfigApiController {
     }
 
     @PostMapping("/setProfileImage")
-    public ResponseEntity<?> postMethodName(@RequestBody SetProfileImageApiDto.RequestBody request) {
+    public ResponseEntity<?> setProfileImage(@RequestBody SetProfileImageApiDto.RequestBody request) {
         String accessToken = request.getAccessToken();
         String profile = request.getProfileImage();
         int isSuccess = userService.setProfileImage("accessToken", accessToken, profile);
@@ -184,8 +199,8 @@ public class ConfigApiController {
     @GetMapping("/getPersonalInfo")
     public ResponseEntity<?> getPersonalInfo(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
 
                 if (user != null)
                     return ResponseEntity.ok(new GetPersonalInfo.SuccessResponse(true, user.getUsername(), user.getEmail()));
@@ -201,8 +216,8 @@ public class ConfigApiController {
     @GetMapping("/getAliasName")
     public ResponseEntity<?> getAliasName(@CookieValue(name="accessToken", required=true) String accessToken) {
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
-                UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
+                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
 
                 if (user != null)
                     return ResponseEntity.ok(new GetAliasNameApiDto.SuccessResponse(true, user.getAliasname()));
@@ -221,11 +236,11 @@ public class ConfigApiController {
         String name = request.getName();
         
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) || !checkUtils.checkQuery(accessToken)
+                && !checkUtils.checkQuery(name)) {
                 UserDTO.UserInfo userDto = new UserDTO.UserInfo();
 
                 userDto.setAliasname(name);
-
                 boolean isUpdate = userService.updateUser("accessToken", accessToken, userDto);
 
                 if (isUpdate)
@@ -247,7 +262,8 @@ public class ConfigApiController {
         String password = request.getPassword();
         
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)
+                && !checkUtils.checkQuery(password)) {
                 UserDTO.UserInfo user = new UserDTO.UserInfo();
 
                 user.setPassword(password);

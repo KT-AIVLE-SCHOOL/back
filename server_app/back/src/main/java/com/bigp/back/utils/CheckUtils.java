@@ -4,6 +4,9 @@ import java.security.SecureRandom;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CheckUtils {
     public boolean checkEmail(String email) {
         String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
@@ -11,6 +14,13 @@ public class CheckUtils {
         return Pattern.compile(emailRegex)
                     .matcher(email)
                     .matches();
+    }
+
+    public boolean checkQuery(String input) {
+        String sqlPattern = "^(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|TRUNCATE)\\s+.*$";
+        Pattern pattern = Pattern.compile(sqlPattern, Pattern.CASE_INSENSITIVE);
+        
+        return pattern.matcher(input.trim()).matches();
     }
 
     public int checkPassword(String password) {

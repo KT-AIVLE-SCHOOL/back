@@ -32,6 +32,7 @@ public class UserInfo {
     private Long id;
     private String username;
     private String password;
+    @Column(unique=true)
     private String email;
     private String accessToken;
     private String refreshToken;
@@ -41,11 +42,11 @@ public class UserInfo {
     @Column(columnDefinition="bytea")
     private byte[] profileImage;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private BabyInfo babyInfo;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @JsonManagedReference
     private ConfigInfo configInfo;
 

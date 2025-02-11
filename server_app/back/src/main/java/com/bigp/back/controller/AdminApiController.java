@@ -19,6 +19,7 @@ import com.bigp.back.dto.admin.ReadNoticeApiDto;
 import com.bigp.back.dto.admin.UpdateNoticeApiDto;
 import com.bigp.back.service.AdminInfoService;
 import com.bigp.back.service.NoticeInfoService;
+import com.bigp.back.utils.CheckUtils;
 import com.bigp.back.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
@@ -32,13 +33,14 @@ public class AdminApiController {
     private final NoticeInfoService noticeService;
     private final AdminInfoService adminService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CheckUtils checkUtils;
 
     @PostMapping("/createNotice")
     public ResponseEntity<?> createNotice(@RequestBody CreateNoticeApiDto.RequestBody request) {
         String accessToken = request.getAccessToken();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) || !checkUtils.checkQuery(accessToken)) {
                 if (adminService.isAdmin(accessToken))
                     return ResponseEntity.ok(new CreateNoticeApiDto.SuccessResponse(true));
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -60,7 +62,8 @@ public class AdminApiController {
         String footer = request.getFooter();
 
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) || !checkUtils.checkQuery(accessToken)
+                || !checkUtils.checkQuery(header) || !checkUtils.checkQuery(body) || !checkUtils.checkQuery(footer)) {
                 if (noticeService.insertNotice(accessToken, header, body, footer))
                     return ResponseEntity.ok(new UpdateNoticeApiDto.SuccessResponse(true));
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -111,7 +114,8 @@ public class AdminApiController {
         String writetime = request.getWritetime();
         
         try {
-            if (jwtTokenProvider.isExpired(accessToken)) {
+            if (jwtTokenProvider.isExpired(accessToken) || !checkUtils.checkQuery(accessToken)
+                || !checkUtils.checkQuery(header) || !checkUtils.checkQuery(writetime)) {
                 if (noticeService.deleteNotice(accessToken, header, writetime))
                     return ResponseEntity.ok(new DeleteNoticeApiDto.SuccessResponse(true));
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)

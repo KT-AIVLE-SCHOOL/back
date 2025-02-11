@@ -22,8 +22,4 @@ public class ConfigInfo {
     private boolean alarm;
 
     private int dataeliminateduration;
-
-    private int coretimestart;
-
-    private int coretimeend;
 }
