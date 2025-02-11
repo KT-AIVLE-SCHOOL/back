@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.Query;
-
 @Component
 public class CheckUtils {
     public boolean checkEmail(String email) {

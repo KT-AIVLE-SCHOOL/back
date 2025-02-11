@@ -31,6 +31,7 @@ public class EmotionApiController {
         int emotion = request.getEmotion();
 
         try {
+            System.out.println("insert postEmotion");
             if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
                 if (emotionService.insertBabyEmotionInfo(accessToken, emotion))
                     return ResponseEntity.ok(new PostAnswerApiDto.SuccessResponse(true));

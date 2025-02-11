@@ -91,6 +91,7 @@ public class BabyEmotionService {
         BabyInfo baby = babyService.getEntity(accessToken);
 
         if (baby != null) {
+            System.out.println("insert BabyEmotion");
             BabyEmotion emotionEntity = new BabyEmotion();
             List<BabyEmotion> emotionList = baby.getBabyEmotions();
 
