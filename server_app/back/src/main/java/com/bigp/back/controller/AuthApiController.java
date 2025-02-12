@@ -61,8 +61,7 @@ public class AuthApiController {
                 update.setRefreshToken(newRefreshToken);
                 if (userService.updateUser("email", email, update))
                     return ResponseEntity.ok(new LoginApiDto.SuccessResponse(true, false, newAccessToken, newRefreshToken));
-            }
-            if (adminService.isMatchedAdmin(email, password)) {
+            } else if (adminService.isMatchedAdmin(email, password)) {
                 String newAccessToken = tokenProvider.createToken(email, true);
                 adminService.updateAdminInfo("email", email, new AdminDTO.AdminInfo(null,null, newAccessToken));
                 return ResponseEntity.ok(new LoginApiDto.SuccessAdminResponse(true, true, newAccessToken));
