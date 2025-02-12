@@ -256,15 +256,16 @@ public class ConfigApiController {
 
     @PostMapping("/setPass")
     public ResponseEntity<?> setPass(@RequestBody SetPassApiDto.RequestBody request) {
-        String email = request.getEmail();
+        String accessToken = request.getAccessToken();
         String password = request.getPassword();
         
         try {
-            if (!checkUtils.checkQuery(email) && !checkUtils.checkQuery(password)) {
+            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)
+                && !checkUtils.checkQuery(password)) {
                 UserDTO.UserInfo user = new UserDTO.UserInfo();
 
                 user.setPassword(password);
-                boolean isUpdate = userService.updateUser("email", email, user);
+                boolean isUpdate = userService.updateUser("accessToken", accessToken, user);
 
                 if (isUpdate)
                     return ResponseEntity.ok(new SetPassApiDto.SuccessResponse(true));
