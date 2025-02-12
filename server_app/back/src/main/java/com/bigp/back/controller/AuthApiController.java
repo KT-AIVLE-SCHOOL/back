@@ -204,7 +204,7 @@ public class AuthApiController {
     }
     
     @GetMapping("/findPass")
-    public ResponseEntity<?> findPass(@CookieValue(name="email", required=true) String email) {
+    public ResponseEntity<?> findPass(@RequestParam String email) {
         try {
             if (checkUtils.checkQuery(email))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
