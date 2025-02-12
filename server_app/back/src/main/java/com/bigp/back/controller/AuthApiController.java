@@ -204,16 +204,16 @@ public class AuthApiController {
     }
     
     @GetMapping("/findPass")
-    public ResponseEntity<?> findPass(@CookieValue(name="accessToken", required=true) String accessToken) {
+    public ResponseEntity<?> findPass(@CookieValue(name="email", required=true) String email) {
         try {
-            if (!tokenProvider.isExpired(accessToken) || checkUtils.checkQuery(accessToken))
+            if (checkUtils.checkQuery(email))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new FindPassApiDto.ErrorResponse(false, "유효하지 않은 인증수단"));
-            UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
+            UserDTO.UserInfo user = userService.getUserInfo("email", email);
             if (user == null)
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new FindPassApiDto.ErrorResponse(false, "존재하지 않는 이메일입니다"));
-            String email = user.getEmail();
+            email = user.getEmail();
             String password = checkUtils.createPass();
             user.setPassword(password);
             userService.updateUser("email", email, user);
