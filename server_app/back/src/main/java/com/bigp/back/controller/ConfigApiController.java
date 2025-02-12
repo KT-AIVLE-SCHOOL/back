@@ -35,8 +35,6 @@ import com.bigp.back.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequestMapping("/api/config")
 @RequiredArgsConstructor
 @RestController
@@ -258,16 +256,15 @@ public class ConfigApiController {
 
     @PostMapping("/setPass")
     public ResponseEntity<?> setPass(@RequestBody SetPassApiDto.RequestBody request) {
-        String accessToken = request.getAccessToken();
+        String email = request.getEmail();
         String password = request.getPassword();
         
         try {
-            if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)
-                && !checkUtils.checkQuery(password)) {
+            if (!checkUtils.checkQuery(email) && !checkUtils.checkQuery(password)) {
                 UserDTO.UserInfo user = new UserDTO.UserInfo();
 
                 user.setPassword(password);
-                boolean isUpdate = userService.updateUser("accessToken", accessToken, user);
+                boolean isUpdate = userService.updateUser("email", email, user);
 
                 if (isUpdate)
                     return ResponseEntity.ok(new SetPassApiDto.SuccessResponse(true));

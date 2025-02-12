@@ -9,7 +9,7 @@ public class SetPassApiDto {
     @Setter
     @AllArgsConstructor
     public static class RequestBody {
-        private String accessToken;
+        private String email;
         private String password;
     }
 
