@@ -164,10 +164,9 @@ public class ConfigApiController {
 
         try {
             if (jwtTokenProvider.isExpired(accessToken) && !checkUtils.checkQuery(accessToken)) {
-                UserDTO.UserInfo user = userService.getUserInfo("accessToken", accessToken);
+                String profileImage = userService.getProfileImage("accessToken", accessToken);
 
-                if (user != null) {
-                    String profileImage = user.getProfileImage();
+                if (profileImage != null) {
                     return ResponseEntity.ok(new GetProfileImageApiDto.SuccessResponse(true, profileImage));
                 }
             }
