@@ -24,8 +24,6 @@ import com.bigp.back.utils.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
-
-
 @RequestMapping("api/admin")
 @RequiredArgsConstructor
 @RestController
