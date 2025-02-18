@@ -169,8 +169,12 @@ public class UserInfoService {
         }
 
         if (user != null) {
-            String profile = Base64.getEncoder().encodeToString(user.getProfileImage());
-            return profile;
+            try {
+                String profile = Base64.getEncoder().encodeToString(user.getProfileImage());
+                return profile;
+            } catch (Exception e) {
+                return null;
+            }
         }
         return null;
     }
